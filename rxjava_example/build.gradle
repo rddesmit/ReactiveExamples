@@ -1,8 +1,11 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
 }
+
+mainClassName = "nl.rddesmit.Main"
 
 dependencies {
     compile 'io.reactivex:rxjava:1.1.3'

@@ -25,35 +25,4 @@ public class Main {
                 .flatMap(code -> tokenObservable)
                 .subscribe(System.out::println, System.out::println);
     }
-
-    static class RandomError<T> implements Observable.OnSubscribe<T> {
-
-        private final T value;
-
-        <R extends T> RandomError(R value){
-            this.value = value;
-        }
-
-        @Override
-        public void call(Subscriber<? super T> subscriber) {
-            try {
-                if (new Random().nextBoolean()) subscriber.onNext(value);
-                else throw new Exception();
-            } catch (Exception e){
-                subscriber.onError(e);
-            }
-        }
-    }
-
-    private static class Code extends RandomError<Integer>{
-        Code(){
-            super(1);
-        }
-    }
-
-    private static class Token extends RandomError<Integer>{
-        Token(){
-            super(2);
-        }
-    }
 }
