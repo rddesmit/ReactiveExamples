@@ -1,3 +1,5 @@
+package nl.rddesmit;
+
 import rx.Observable;
 import rx.Subscriber;
 
@@ -24,11 +26,11 @@ public class Main {
                 .subscribe(System.out::println, System.out::println);
     }
 
-    public static class RandomError<T> implements Observable.OnSubscribe<T> {
+    static class RandomError<T> implements Observable.OnSubscribe<T> {
 
         private final T value;
 
-        public <R extends T> RandomError(R value){
+        <R extends T> RandomError(R value){
             this.value = value;
         }
 
@@ -43,14 +45,14 @@ public class Main {
         }
     }
 
-    public static class Code extends RandomError<Integer>{
-        public Code(){
+    private static class Code extends RandomError<Integer>{
+        Code(){
             super(1);
         }
     }
 
-    public static class Token extends RandomError<Integer>{
-        public Token(){
+    private static class Token extends RandomError<Integer>{
+        Token(){
             super(2);
         }
     }
