@@ -1,1 +1,1 @@
-include ':rxjava_example', ':akka_example'
+include ':rxjava_example', ':akka_example', ':akka_example_2'
