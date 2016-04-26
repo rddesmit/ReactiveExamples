@@ -1,9 +1,10 @@
 package nl.rddesmit;
 
 import akka.actor.Props;
-import akka.actor.UntypedActor;
 
 /**
+ * Respond with a 'Code' or a error to a message.
+ *
  * Created by rudies on 25-4-2016.
  */
 class CodeActor extends RandomErrorActor{

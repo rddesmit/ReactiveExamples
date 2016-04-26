@@ -2,40 +2,42 @@ package nl.rddesmit;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.dispatch.Futures;
 import akka.dispatch.Mapper;
 import akka.dispatch.OnFailure;
 import akka.dispatch.OnSuccess;
 import akka.util.Timeout;
-import akka.actor.UntypedActor;
 import com.typesafe.config.ConfigFactory;
 import scala.concurrent.Future;
 
+import java.util.concurrent.TimeUnit;
+
 import static akka.dispatch.Futures.future;
 import static akka.pattern.Patterns.ask;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by rudies on 25-4-2016.
  */
 public class Main {
 
+    // Create the actor system and load the config. The peek-dispatcher is applied to the 'code' and 'token' actor
     private static final ActorSystem actorSystem = ActorSystem.create("ActorSystem", ConfigFactory.load());
 
     public static void main(String[] args){
 
 
+        // Trade a url for a code and a code for a token
         Future<Object> future = future(() -> "url", actorSystem.dispatcher())
                 .flatMap(new GetCode(), actorSystem.dispatcher())
                 .flatMap(new GetToken(), actorSystem.dispatcher());
 
+        // Print the result
         future.onSuccess(new PrintLnOnSucces(), actorSystem.dispatcher());
         future.onFailure(new PrintLnOnFailure(), actorSystem.dispatcher());
     }
 
+    /**
+     * Try three times and within 1 hour to create a code.
+     */
     private static class GetCode extends Mapper<String, Future<Object>>{
 
         @Override
@@ -45,6 +47,9 @@ public class Main {
         }
     }
 
+    /**
+     * Try three times and within 500 ms to create a token.
+     */
     private static class GetToken extends Mapper<Object, Future<Object>>{
 
         @Override

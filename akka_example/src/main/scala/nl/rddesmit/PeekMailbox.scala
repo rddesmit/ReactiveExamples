@@ -6,7 +6,7 @@ package nl.rddesmit
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentLinkedQueue}
 
 import com.typesafe.config.Config
-import akka.actor.{ActorContext, ActorRef, ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider, SupervisorStrategy, UntypedActor, UntypedActorContext}
+import akka.actor.{ActorContext, ActorRef, ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider, UntypedActor}
 import akka.dispatch.{Envelope, MailboxType, MessageQueue, UnboundedQueueBasedMessageQueue}
 
 object PeekMailboxExtension extends ExtensionId[PeekMailboxExtension] with ExtensionIdProvider {
