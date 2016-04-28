@@ -5,15 +5,17 @@ import akka.actor.ActorSystem;
 import akka.dispatch.Mapper;
 import akka.dispatch.OnFailure;
 import akka.dispatch.OnSuccess;
-import akka.dispatch.Recover;
 import akka.util.Timeout;
 import scala.concurrent.Future;
 
 import java.util.concurrent.TimeUnit;
 
 import static akka.dispatch.Futures.future;
-import static akka.pattern.Patterns.ask;
+import static nl.rddesmit.Retry.retryJava;
 
+/**
+ * Retry via future
+ */
 public class Main {
 
     private static final ActorSystem actorSystem = ActorSystem.create();
@@ -33,7 +35,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(final String url) {
-            return Retry.retryJava(codeActor, "", 3, Timeout.apply(10, TimeUnit.SECONDS), actorSystem.dispatcher());
+            return retryJava(codeActor, "", 3, Timeout.apply(10, TimeUnit.SECONDS), actorSystem.dispatcher());
         }
     }
 
@@ -41,7 +43,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(final Object object) {
-            return Retry.retryJava(tokenActor, "", 3, Timeout.apply(500, TimeUnit.MILLISECONDS), actorSystem.dispatcher());
+            return retryJava(tokenActor, "", 3, Timeout.apply(500, TimeUnit.MILLISECONDS), actorSystem.dispatcher());
         }
     }
 

@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import static akka.dispatch.Futures.future;
 import static akka.pattern.Patterns.ask;
 
+/**
+ * Retry via retry actor
+ */
 public class Main {
 
     private static final ActorSystem actorSystem = ActorSystem.create();

@@ -15,6 +15,8 @@ import static akka.dispatch.Futures.future;
 import static akka.pattern.Patterns.ask;
 
 /**
+ * Retry via mailbox
+ *
  * Created by rudies on 25-4-2016.
  */
 public class Main {
