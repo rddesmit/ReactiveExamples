@@ -40,7 +40,7 @@ De 'recover' mogelijheid van de future wordt gebruikt om de initiele actie opnie
 waarop Rx zijn retry meganisme baseerd.
 
 __Pros__
-* Eenvoudig te gebruiken op hoog obstractie niveau
+* Eenvoudig te gebruiken op hoog abstractie niveau
 * Weinig code
 
 __Cons__

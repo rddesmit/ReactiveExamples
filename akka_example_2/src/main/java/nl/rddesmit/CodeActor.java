@@ -3,11 +3,13 @@ package nl.rddesmit;
 import akka.actor.Props;
 
 /**
+ * Reply with a 'Code' to every message
+ *
  * Created by rudies on 26-4-2016.
  */
-public class CodeActor extends RandomErrorActor {
+class CodeActor extends RandomErrorActor {
 
-    public static Props props(){
+    static Props props(){
         return Props.create(CodeActor.class);
     }
 

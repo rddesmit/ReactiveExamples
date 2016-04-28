@@ -51,6 +51,9 @@ class PeekMailboxType(settings: ActorSystem.Settings, config: Config) extends Ma
   }
 }
 
+/**
+  * JAVA API: Java actor should extend this class and call 'ack' to acknowledge a message.
+  */
 abstract class PeekMailBoxActor extends UntypedActor{
   def ack(context: ActorContext): Unit = PeekMailboxExtension.ack()(context)
 }

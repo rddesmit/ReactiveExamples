@@ -11,14 +11,20 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 object Retry{
 
+  /**
+    * Java API: Akka 'ask' method with N retries.
+    */
   def retryJava(to: ActorRef, message: Object, retries: Int, timout: Timeout, executor: ExecutionContext): Future[Any] = {
-    implicit val _t = timout;
-    implicit val _e = executor;
+    implicit val _t = timout
+    implicit val _e = executor
 
-    retry(() => (to ? message), retries)
+    retry(() => to ? message, retries)
   }
 
 
+  /**
+    * Try to re-execute a action N times before it fails.
+    */
   def retry(action: () => Future[Any], retries: Int)(implicit timout: Timeout, executor: ExecutionContext): Future[Any] = {
     action() recoverWith { case _ => if (retries >= 0) retry(action, retries -1) else throw new Exception }
   }

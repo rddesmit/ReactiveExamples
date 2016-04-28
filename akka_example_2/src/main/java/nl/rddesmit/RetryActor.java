@@ -75,6 +75,9 @@ class RetryActor extends AbstractActor {
         }
     }
 
+    /**
+     * Send the result to the original sender
+     */
     private class ReturnOnSuccess extends OnSuccess<Object>{
 
         private final Retry retry;
@@ -89,6 +92,9 @@ class RetryActor extends AbstractActor {
         }
     }
 
+    /**
+     * If the original message has 'retries' left send the retry message to 'self()' with one less retry.
+     */
     private class RetryOnFailure extends OnFailure{
 
         private final Retry retry;

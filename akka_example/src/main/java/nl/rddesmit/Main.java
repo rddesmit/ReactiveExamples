@@ -38,13 +38,13 @@ public class Main {
     }
 
     /**
-     * Try three times and within 1 hour to create a code.
+     * Try three times and within 10 seconds to create a code.
      */
     private static class GetCode extends Mapper<String, Future<Object>>{
 
         @Override
         public Future<Object> apply(final String actor){
-            return ask(codeActor, "", Timeout.apply(1, TimeUnit.HOURS));
+            return ask(codeActor, "", Timeout.apply(10, TimeUnit.SECONDS));
         }
     }
 
@@ -55,7 +55,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(Object object){
-            return ask(tokenActor, "", Timeout.apply(500, TimeUnit.HOURS));
+            return ask(tokenActor, "", Timeout.apply(500, TimeUnit.MILLISECONDS));
         }
     }
 

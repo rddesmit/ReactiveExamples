@@ -18,19 +18,25 @@ import static nl.rddesmit.Retry.retryJava;
  */
 public class Main {
 
+    // Create actor system
     private static final ActorSystem actorSystem = ActorSystem.create();
     private static final ActorRef codeActor = actorSystem.actorOf(CodeActor.props());
     private static final ActorRef tokenActor = actorSystem.actorOf(TokenActor.props());
 
     public static void main(String[] args) {
+        // Trade a url for a code and a code for a token
         Future<Object> future = future(() -> "url", actorSystem.dispatcher())
                 .flatMap(new GetCode(), actorSystem.dispatcher())
                 .flatMap(new GetToken(), actorSystem.dispatcher());
 
+        // Print the result
         future.onSuccess(new PrintLnOnSuccess(), actorSystem.dispatcher());
         future.onFailure(new PrintLnOnFailure(), actorSystem.dispatcher());
     }
 
+    /**
+     * Try three times to get the code
+     */
     private static class GetCode extends Mapper<String, Future<Object>> {
 
         @Override
@@ -39,6 +45,9 @@ public class Main {
         }
     }
 
+    /**
+     * Try three times to get the token
+     */
     private static class GetToken extends Mapper<Object, Future<Object>> {
 
         @Override

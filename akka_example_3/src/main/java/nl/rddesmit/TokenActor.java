@@ -3,11 +3,13 @@ package nl.rddesmit;
 import akka.actor.Props;
 
 /**
+ * Reply with a 'Token' to every message
+ *
  * Created by rudies on 26-4-2016.
  */
-public class TokenActor extends RandomErrorActor {
+class TokenActor extends RandomErrorActor {
 
-    public static Props props(){
+    static Props props(){
         return Props.create(TokenActor.class);
     }
 
