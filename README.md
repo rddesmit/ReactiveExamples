@@ -1,9 +1,25 @@
 ## Actor retry options
-Het doel is om een bericht dat niet correct verwerkt is een N aantal keer opnieuw proberen te verwerken
+Het doel is om een bericht dat niet correct verwerkt is een N aantal keer opnieuw proberen te verwerken.
+
+
+Als voorbeeld is een typische OAuth inlog flow nagebootst. Een url wordt ingewisseld voor een _code_ en deze wordt weer
+ingewisseld voor een _token_. Beide operaties moeten 3 keer opnieuw geprobeerd worden als deze faalt. Daarbij mag de
+laatste operatie niet langer dan 500ms duren.
+
+```
+() ->  url {
+    code <- trade url for code
+    token <- trade code for token within 500 ms
+}
+```
 
 
 ### Option 1: Mailbox
 _akka_example_
+
+```Bash
+$ gradlew :akka_example:run
+```
 
 De mailbox is hier verantwoordelijk voor het N aantal keer opnieuw versturen van het mislukte bericht. Dit werkt omdat
 de mailbox blijft bestaan zolang een supervisor een failure afhandeld.
@@ -18,9 +34,15 @@ __Pros__
 __Cons__
 * Logica moet zelf de 'acknowledgement' afhandelen
 
+[Bron](http://doc.akka.io/docs/akka/current/contrib/peek-mailbox.html)
+
 
 ### Option 2: Retry actor
 _akka_example_2_
+
+```Bash
+$ gradlew :akka_example2:run
+```
 
 De retry actor is hier verantwoordelijk voor het N aantal keer opnieuw versturen van het mislukte bericht. De retry actor
 supervised de child icm het 'ask' pattern, en weet hierdoor of een bericht opnieuw verstuurd moet worden.
@@ -32,9 +54,15 @@ __Cons__
 * Meer overhead doordat ieder bericht door een extra actor heen moet
 * Meer code
 
+[Bron](https://gist.github.com/codetinkerhack/8206481)
+
 
 ### Option 3: Retry future
 _akka_example_3_
+
+```Bash
+$ gradlew :akka_example3:run
+```
 
 De 'recover' mogelijheid van de future wordt gebruikt om de initiele actie opnieuw uit te voeren. Dit lijkt op de manier
 waarop Rx zijn retry meganisme baseerd.
@@ -46,6 +74,8 @@ __Pros__
 __Cons__
 * Veel overhead doordat gehele actie opnieuw wordt uitgevoerd
 
+[Bron](https://blog.knoldus.com/2013/08/18/a-simple-way-to-implement-retry-support-for-akka-future-in-scala/)
+
 
 # Keuze boom
 Te maken keuzes
@@ -54,6 +84,7 @@ Te maken keuzes
 * Waar herstart logica plaatsen
 * Wel of geen state bewaren
 
+---
 1. __Geen__ state behouden
     1. __Zelfde__ retry logica voor iedere fout
         1. Retry verantwoordelijkheid bij actor met de logica
