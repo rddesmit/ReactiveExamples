@@ -21,17 +21,17 @@ public class Main {
 
     // Create the actor system and load the config. The peek-dispatcher is applied to the 'code' and 'token' actor
     private static final ActorSystem actorSystem = ActorSystem.create("ActorSystem", ConfigFactory.load());
+    private static final ActorRef codeActor = actorSystem.actorOf(CodeActor.props(), "code");
+    private static final ActorRef tokenActor = actorSystem.actorOf(TokenActor.props(), "token");
 
     public static void main(String[] args){
-
-
         // Trade a url for a code and a code for a token
         Future<Object> future = future(() -> "url", actorSystem.dispatcher())
                 .flatMap(new GetCode(), actorSystem.dispatcher())
                 .flatMap(new GetToken(), actorSystem.dispatcher());
 
         // Print the result
-        future.onSuccess(new PrintLnOnSucces(), actorSystem.dispatcher());
+        future.onSuccess(new PrintLnOnSuccess(), actorSystem.dispatcher());
         future.onFailure(new PrintLnOnFailure(), actorSystem.dispatcher());
     }
 
@@ -42,8 +42,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(final String actor){
-            final ActorRef actorRef = actorSystem.actorOf(CodeActor.props(), "code");
-            return ask(actorRef, "", Timeout.apply(1, TimeUnit.HOURS));
+            return ask(codeActor, "", Timeout.apply(1, TimeUnit.HOURS));
         }
     }
 
@@ -54,12 +53,11 @@ public class Main {
 
         @Override
         public Future<Object> apply(Object object){
-            final ActorRef actorRef = actorSystem.actorOf(TokenActor.props(), "token");
-            return ask(actorRef, "", Timeout.apply(500, TimeUnit.MILLISECONDS));
+            return ask(tokenActor, "", Timeout.apply(500, TimeUnit.HOURS));
         }
     }
 
-    private static class PrintLnOnSucces extends OnSuccess<Object>{
+    private static class PrintLnOnSuccess extends OnSuccess<Object>{
 
         @Override
         public void onSuccess(Object result) throws Throwable {
