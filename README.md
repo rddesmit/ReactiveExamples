@@ -30,26 +30,26 @@ Te maken keuzes
 * Wel of geen state bewaren
 
 1. __Geen__ state behouden
-.1. __Zelfde__ retry logica voor iedere fout
-..1. Retry verantwoordelijkheid bij actor met de logica
-...1. PeekMailbox
-.....1. Count bijhouden
-.....2. Bericht opnieuw versturen
-....2. (default) supervisor
-.....1. _Restart_ uitvoeren
-...2. Retry verantwoordelijkheid _niet_ bij actor met de logica
-....1. Retry Actor
-.....1. Count bijhouden
-.....2. Bericht opnieuw versturen
-....2. (default) supervisor
-.....1. _Restart_ uitvoeren
-.2. __Andere__ retry logica afhankelijk van state
-..1. Retry count logica verantwoordelijkheid los van hoe de retry moet plaatsvinden
-...1. Retry Actor
-....1. Count bijhouden
-....2. _Restart_ uitvoeren
-...1. Post restart
-....1. Bericht opnieuw versturen
+    1. __Zelfde__ retry logica voor iedere fout
+        1. Retry verantwoordelijkheid bij actor met de logica
+            1. PeekMailbox
+                1. Count bijhouden
+                2. Bericht opnieuw versturen
+            2. (default) supervisor
+                1. _Restart_ uitvoeren
+        2. Retry verantwoordelijkheid _niet_ bij actor met de logica
+            1. Retry Actor
+                1. Count bijhouden
+                2. Bericht opnieuw versturen
+            2. (default) supervisor
+                1. _Restart_ uitvoeren
+    2. __Andere__ retry logica afhankelijk van state
+        1. Retry count logica verantwoordelijkheid los van hoe de retry moet plaatsvinden
+            1. Retry Actor
+                1. Count bijhouden
+                2. _Restart_ uitvoeren
+            1. Post restart
+                1. Bericht opnieuw versturen
 2. __Wel__ state behouden
-.1. _Resume_ ipv restart uitvoeren, daarna zie punt 1
-.2. Zelf de count logica bijhouden
+    1. _Resume_ ipv restart uitvoeren, daarna zie punt 1
+    2. Zelf de count logica bijhouden
