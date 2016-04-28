@@ -5,6 +5,7 @@ import akka.actor.ActorSystem;
 import akka.dispatch.Mapper;
 import akka.dispatch.OnFailure;
 import akka.dispatch.OnSuccess;
+import akka.dispatch.Recover;
 import akka.util.Timeout;
 import scala.concurrent.Future;
 
@@ -16,7 +17,6 @@ import static akka.pattern.Patterns.ask;
 public class Main {
 
     private static final ActorSystem actorSystem = ActorSystem.create();
-    private static final ActorRef retryActor = actorSystem.actorOf(RetryActor.props());
     private static final ActorRef codeActor = actorSystem.actorOf(CodeActor.props());
     private static final ActorRef tokenActor = actorSystem.actorOf(TokenActor.props());
 
@@ -33,8 +33,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(final String url) {
-            final RetryActor.Try message = new RetryActor.Try(codeActor, "", 3, Timeout.apply(10, TimeUnit.SECONDS));
-            return ask(retryActor, message, Timeout.apply(10, TimeUnit.SECONDS));
+            return Retry.retryJava(codeActor, "", 3, Timeout.apply(10, TimeUnit.SECONDS), actorSystem.dispatcher());
         }
     }
 
@@ -42,8 +41,7 @@ public class Main {
 
         @Override
         public Future<Object> apply(final Object object) {
-            final RetryActor.Try message = new RetryActor.Try(tokenActor, "", 3, Timeout.apply(500, TimeUnit.MILLISECONDS));
-            return ask(retryActor, message, Timeout.apply(500, TimeUnit.MILLISECONDS));
+            return Retry.retryJava(tokenActor, "", 3, Timeout.apply(500, TimeUnit.MILLISECONDS), actorSystem.dispatcher());
         }
     }
 
@@ -59,7 +57,7 @@ public class Main {
 
         @Override
         public void onFailure(Throwable failure) throws Throwable {
-            //ignore
+            System.out.println(failure);
         }
     }
 }

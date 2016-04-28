@@ -1,0 +1,23 @@
+apply plugin: 'scala'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+mainClassName = "nl.rddesmit.Main"
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java']
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
+
+dependencies {
+    compile 'com.typesafe.akka:akka-actor_2.11:2.4.4'
+}
